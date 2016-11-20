@@ -23,7 +23,8 @@ public class PersistentExpenseManager extends ExpenseManager {
     @Override
     public void setup(){
         //First open an existing database or create new one
-        SQLiteDatabase mydatabase = ctx.openOrCreateDatabase("expenses5", ctx.MODE_PRIVATE, null);
+        //IMPORTANT DATABASE NAME SHOULD BE YOUR INDEX NUMBER
+        SQLiteDatabase mydatabase = ctx.openOrCreateDatabase("140429", ctx.MODE_PRIVATE, null);
 
         //If it's the first time, we have to create the databases.
         mydatabase.execSQL("CREATE TABLE IF NOT EXISTS Account(" +
