@@ -109,13 +109,15 @@ public class PersistentAccountDAO implements AccountDAO {
 
     @Override
     public void updateBalance(String accountNo, ExpenseType expenseType, double amount) throws InvalidAccountException {
-        String sql = "UPDATE Account SET Initial_amt = Initial_amt + ?";
+        String sql = "UPDATE Account SET Initial_amt = Initial_amt + ? WHERE Account_no = ?";
         SQLiteStatement statement = database.compileStatement(sql);
         if(expenseType == ExpenseType.EXPENSE){
             statement.bindDouble(1,-amount);
         }else{
             statement.bindDouble(1,amount);
         }
+
+        statement.bindString(2,accountNo);
 
         statement.executeUpdateDelete();
     }
