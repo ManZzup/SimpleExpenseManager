@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import lk.ac.mrt.cse.dbs.simpleexpensemanager.data.AccountDAO;
 import lk.ac.mrt.cse.dbs.simpleexpensemanager.data.impl.PersistentAccountDAO;
 import lk.ac.mrt.cse.dbs.simpleexpensemanager.data.impl.PersistentTransactionDAO;
+import lk.ac.mrt.cse.dbs.simpleexpensemanager.data.model.Account;
 
 
 /**
@@ -48,7 +49,11 @@ public class PersistentExpenseManager extends ExpenseManager {
 
 
         //These two functions will hold our DAO instances in memory till the program exists
-        setAccountsDAO(new PersistentAccountDAO(mydatabase));
+        PersistentAccountDAO accountDAO = new PersistentAccountDAO(mydatabase);
+        //accountDAO.addAccount(new Account("Account12","Sampath bank","Manujith",500));
+
+        setAccountsDAO(accountDAO);
+
         setTransactionsDAO(new PersistentTransactionDAO(mydatabase));
     }
 }

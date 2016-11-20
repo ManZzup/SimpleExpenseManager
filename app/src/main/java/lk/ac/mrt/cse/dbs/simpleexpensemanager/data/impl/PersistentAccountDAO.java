@@ -28,13 +28,15 @@ public class PersistentAccountDAO implements AccountDAO {
         //Cursor is just an iterator
         Cursor resultSet = database.rawQuery("SELECT Account_no FROM Account",null);
         //We point the cursor to the first record before looping
-        resultSet.moveToFirst();
+
         //Initialize a list to store the relevant data
         List<String> accounts = new ArrayList<String>();
 
         //Loop the iterator and add data to the List
-        while(resultSet.moveToNext()){
-            accounts.add(resultSet.getString(resultSet.getColumnIndex("Account_no")));
+        if(resultSet.moveToFirst()) {
+            do {
+                accounts.add(resultSet.getString(resultSet.getColumnIndex("Account_no")));
+            } while (resultSet.moveToNext());
         }
         //Return the list
         return accounts;
@@ -43,15 +45,16 @@ public class PersistentAccountDAO implements AccountDAO {
     @Override
     public List<Account> getAccountsList() {
         Cursor resultSet = database.rawQuery("SELECT * FROM Account",null);
-        resultSet.moveToFirst();
         List<Account> accounts = new ArrayList<Account>();
 
-        while(resultSet.moveToNext()){
-            Account account = new Account(resultSet.getString(resultSet.getColumnIndex("Account_no")),
-                                          resultSet.getString(resultSet.getColumnIndex("Bank")),
-                                          resultSet.getString(resultSet.getColumnIndex("Holder")),
-                                          resultSet.getDouble(resultSet.getColumnIndex("Initial_amt")));
-            accounts.add(account);
+        if(resultSet.moveToFirst()) {
+            do {
+                Account account = new Account(resultSet.getString(resultSet.getColumnIndex("Account_no")),
+                        resultSet.getString(resultSet.getColumnIndex("Bank")),
+                        resultSet.getString(resultSet.getColumnIndex("Holder")),
+                        resultSet.getDouble(resultSet.getColumnIndex("Initial_amt")));
+                accounts.add(account);
+            } while (resultSet.moveToNext());
         }
 
         return accounts;
@@ -60,13 +63,15 @@ public class PersistentAccountDAO implements AccountDAO {
     @Override
     public Account getAccount(String accountNo) throws InvalidAccountException {
         Cursor resultSet = database.rawQuery("SELECT * FROM Account WHERE Account_no = " + accountNo,null);
-        resultSet.moveToFirst();
         Account account = null;
-        while(resultSet.moveToNext()){
-            account = new Account(resultSet.getString(resultSet.getColumnIndex("Account_no")),
-                    resultSet.getString(resultSet.getColumnIndex("Bank")),
-                    resultSet.getString(resultSet.getColumnIndex("Holder")),
-                    resultSet.getDouble(resultSet.getColumnIndex("Initial_amt")));
+
+        if(resultSet.moveToFirst()) {
+            do {
+                account = new Account(resultSet.getString(resultSet.getColumnIndex("Account_no")),
+                        resultSet.getString(resultSet.getColumnIndex("Bank")),
+                        resultSet.getString(resultSet.getColumnIndex("Holder")),
+                        resultSet.getDouble(resultSet.getColumnIndex("Initial_amt")));
+            } while (resultSet.moveToNext());
         }
 
         return account;
