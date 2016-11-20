@@ -19,19 +19,25 @@ import lk.ac.mrt.cse.dbs.simpleexpensemanager.data.model.ExpenseType;
 public class PersistentAccountDAO implements AccountDAO {
     private SQLiteDatabase database;
 
+    //We need to store the database in the constructor to prevent reopening it everytime
     public PersistentAccountDAO(SQLiteDatabase db){
         this.database = db;
     }
     @Override
     public List<String> getAccountNumbersList() {
+        //To loop through results, we first acquire a cursor to the result set.
+        //Cursor is just an iterator
         Cursor resultSet = database.rawQuery("SELECT Account_no FROM Account",null);
+        //We point the cursor to the first record before looping
         resultSet.moveToFirst();
+        //Initialize a list to store the relevant data
         List<String> accounts = new ArrayList<String>();
 
+        //Loop the iterator and add data to the List
         while(resultSet.moveToNext()){
             accounts.add(resultSet.getString(resultSet.getColumnIndex("Account_no")));
         }
-
+        //Return the list
         return accounts;
     }
 
@@ -69,14 +75,19 @@ public class PersistentAccountDAO implements AccountDAO {
 
     @Override
     public void addAccount(Account account) {
+        //For inserting we use prepared statements
+        //First we prepare the sql with the variables to be hold
         String sql = "INSERT INTO Account (Account_no,Bank,Holder,Initial_amt) VALUES (?,?,?,?)";
         SQLiteStatement statement = database.compileStatement(sql);
 
+
+        //Bind the values correctly. First holder is index 1
         statement.bindString(1, account.getAccountNo());
         statement.bindString(2, account.getBankName());
         statement.bindString(3, account.getAccountHolderName());
         statement.bindDouble(4, account.getBalance());
 
+        //Execute it
         statement.executeInsert();
 
 
